@@ -1,0 +1,72 @@
+<!doctype html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fotogalleri</title>
+<style>
+
+body {
+	background-color: black;
+	color: white;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	width: 100dvw;
+	height: 100dvh;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+img {
+	display: block;
+	max-width: 100%;
+	max-height: 100%;
+}
+
+#error {
+	position: absolute;
+	padding: 12px;
+	background-color: #800c;
+	color: white;
+	font-size: 36px;
+}
+
+#error:empty {
+	display: none;
+}
+
+</style>
+<body>
+	<img id="picture" src="photo-camera.svg">
+	<div id="error">Connecting...</div>
+</body>
+<script>
+"use strict"
+
+var event_source
+
+function start_event_source() {
+	if (!event_source || event_source.readyState === 2) {
+		console.log("STARTING EVENT SOURCE")
+		event_source = new EventSource("/show-events")
+
+		event_source.addEventListener("show", function (evt) {
+			document.getElementById("error").textContent = ""
+			document.getElementById("picture").src = JSON.parse(evt.data)
+		})
+
+		event_source.onerror = function (err) {
+			document.getElementById("error").textContent = "Disconnected..."
+		}
+
+		window.onbeforeunload = function (evt) {
+			event_source.close()
+		}
+	}
+}
+
+start_event_source()
+
+setInterval(start_event_source, 5000)
+
+</script>

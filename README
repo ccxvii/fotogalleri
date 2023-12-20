@@ -1,0 +1,20 @@
+INSTALL:
+
+	npm install
+
+ADD PICTURES TO GALLERY:
+
+	cp *.jpg public/pictures/
+
+RUN SERVER:
+
+	node server.js
+
+CONTROL PAGE:
+
+	firefox http://localhost:8000/
+
+DISPLAY PAGE:
+
+	firefox http://localhost:8000/show.html
+

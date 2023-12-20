@@ -1,0 +1,63 @@
+<!doctype html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fotogalleri</title>
+<style>
+
+body {
+	background-color: dimgray;
+	margin: 24px;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	gap: 24px;
+}
+
+img {
+	display: block;
+	max-width: 144px;
+	max-height: 144px;
+	box-shadow: 2px 2px 8px #0008;
+	cursor: pointer;
+}
+
+</style>
+<body></body>
+<script>
+
+"use strict"
+
+function show_picture(evt) {
+	let url = evt.target.src
+	fetch("/show", {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/x-www-form-urlencoded",
+		},
+		body: "url=" + url,
+	})
+		.then(function (r) {
+			return r.text()
+		})
+		.then(function (t) {
+			console.log("SHOW RESULT: " + t)
+		})
+		.catch(function (e) {
+			console.log("SHOW ERROR: " + e)
+		})
+}
+
+fetch("/list")
+	.then(function (r) {
+		return r.json()
+	})
+	.then(function (list) {
+		for (let url of list) {
+			let img = new Image()
+			img.src = url
+			img.onclick = show_picture
+			document.body.appendChild(img)
+		}
+	})
+
+</script>
